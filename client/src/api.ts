@@ -48,6 +48,23 @@ type LogsResponse = { logs: TimeLog[] };
 type SummaryResponse = { date: string; summary: DailySummary };
 type ApiOptions = Omit<RequestInit, "body"> & { body?: unknown };
 
+const readApiError = (data: unknown, fallback: string) => {
+  if (!data || typeof data !== "object" || !("error" in data)) {
+    return fallback;
+  }
+
+  const error = data.error as {
+    message?: string;
+    details?: { fieldErrors?: Record<string, string[]> };
+  };
+  const fieldErrors = error.details?.fieldErrors || {};
+  const firstFieldError = Object.values(fieldErrors)
+    .flat()
+    .find(Boolean);
+
+  return firstFieldError || error.message || fallback;
+};
+
 const request = async <T>(path: string, options: ApiOptions = {}) => {
   const { body, ...requestOptions } = options;
   const headers = new Headers(options.headers);
@@ -78,10 +95,7 @@ const request = async <T>(path: string, options: ApiOptions = {}) => {
     : await response.text();
 
   if (!response.ok) {
-    const message =
-      typeof data === "object" && data?.error?.message
-        ? data.error.message
-        : response.statusText;
+    const message = readApiError(data, response.statusText);
     throw new Error(message);
   }
 

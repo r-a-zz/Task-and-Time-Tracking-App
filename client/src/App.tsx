@@ -163,7 +163,6 @@ function App() {
   const handleAuthSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     setNotice(null);
-    setBusy(true);
 
     try {
       const payload = {
@@ -172,6 +171,32 @@ function App() {
         name: authForm.name.trim() || undefined,
       };
 
+      if (!payload.email.includes("@")) {
+        setNotice({ type: "error", message: "Enter a valid email address." });
+        return;
+      }
+
+      if (payload.password.length < 8) {
+        setNotice({
+          type: "error",
+          message: "Password must be at least 8 characters.",
+        });
+        return;
+      }
+
+      if (
+        authMode === "register" &&
+        authForm.name.trim() &&
+        authForm.name.trim().length < 2
+      ) {
+        setNotice({
+          type: "error",
+          message: "Name must be at least 2 characters.",
+        });
+        return;
+      }
+
+      setBusy(true);
       const response =
         authMode === "register"
           ? await registerUser(payload)
