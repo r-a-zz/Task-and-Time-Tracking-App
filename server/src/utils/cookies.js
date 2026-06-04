@@ -1,8 +1,10 @@
+const { env } = require("../config/env");
+
 const isProduction = process.env.NODE_ENV === "production";
 
 const baseOptions = {
   httpOnly: true,
-  sameSite: "lax",
+  sameSite: env.COOKIE_SAME_SITE,
   secure: isProduction,
   path: "/",
 };

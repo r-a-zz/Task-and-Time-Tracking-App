@@ -50,6 +50,7 @@ const env = {
     process.env.DB_SSL_REJECT_UNAUTHORIZED,
     true,
   ),
+  COOKIE_SAME_SITE: process.env.COOKIE_SAME_SITE || "lax",
 };
 
 module.exports = { env };
