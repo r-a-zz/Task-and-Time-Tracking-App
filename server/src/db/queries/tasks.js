@@ -16,7 +16,7 @@ const listTasksByUser = async (userId) => {
     LEFT JOIN time_logs tl
       ON tl.task_id = t.id AND tl.user_id = t.user_id AND tl.ended_at IS NOT NULL
     WHERE t.user_id = ?
-    GROUP BY t.id
+    GROUP BY t.id, t.user_id, t.title, t.description, t.status, t.created_at, t.updated_at
     ORDER BY t.created_at DESC
     `,
     [userId],
