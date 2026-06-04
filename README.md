@@ -100,7 +100,7 @@ VITE_API_URL=http://localhost:4000
 
 ## Deployment
 
-Live demo link: _add deployed URL here_
+Live demo link: https://task-and-time-tracking-app-plum.vercel.app
 
 Suggested deployment:
 
